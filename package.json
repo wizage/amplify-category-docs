@@ -1,0 +1,26 @@
+{
+  "name": "amplify-category-docs",
+  "version": "1.0.0",
+  "description": "Link to Amplify docs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "amplify",
+    "docs"
+  ],
+  "author": "wizage",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "inquirer": "^6.2.2",
+    "opn": "^6.0.0"
+  },
+  "devDependencies": {
+    "fs": "0.0.1-security",
+    "fs-extra": "^7.0.1",
+    "nodegit": "^0.24.1",
+    "path": "^0.12.7"
+  }
+}
