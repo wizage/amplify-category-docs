@@ -15,7 +15,7 @@ module.exports = {
 
     try {
         const { first } = context.parameters;
-        if (first && first !== 'update') {
+        if (first !== 'update') {
           docsOpener.openDoc(context);
          // opn('https://aws-amplify.github.io/docs/' + );
         } else {
