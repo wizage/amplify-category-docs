@@ -1,38 +1,25 @@
 const opn = require('opn');
 const inquirer = require('inquirer');
 const availableDocs = require('./docs.json');
-async function openDoc(context){
+
+async function openDoc(context) {
   const { first, second } = context.parameters;
 
-  if (first){
+  if (first) {
     await useParams(context, first, second);
   } else {
     await noParams(context);
   }
-  //const first = ""; 
 }
-/*
-Add the way to auto fill the frontend. For now we just dont check....
 
- if (context.amplify.pathManager.searchProjectRootPath()){
-      let first = "";
-      const projectConfig = context.amplify.getProjectConfig();
-      if (projectConfig.frontend){
-          opn('https://aws-amplify.github.io/docs/'+ projectConfig.frontend.toLowerCase() + '/' + first.toLowerCase());
-      }
-  }
-
-*/
-
-function searchDocs(word){
-  let returnValue = {}
-  let urlInfo = {}
-  if(availableDocs[word]){
+function searchDocs(word) {
+  const returnValue = {};
+  if (availableDocs[word]) {
     returnValue[word] = availableDocs[word];
   } else {
-    Object.keys(availableDocs).forEach(key => {
-      var a = availableDocs[key].indexOf(word);
-      if (a > -1){
+    Object.keys(availableDocs).forEach((key) => {
+      const a = availableDocs[key].indexOf(word);
+      if (a > -1) {
         returnValue[key] = [word];
       }
     });
@@ -40,7 +27,8 @@ function searchDocs(word){
   return returnValue;
 }
 
-async function noParams(context){
+async function noParams(context) {
+  let amplifyFrontend = getCurrentFrontend(context);
   const chooseFrontend = [
     {
       type: 'list',
@@ -51,42 +39,50 @@ async function noParams(context){
     },
   ];
 
-  let frontend = await inquirer.prompt(chooseFrontend);
+  if (!amplifyFrontend) {
+    const frontend = await inquirer.prompt(chooseFrontend);
+    amplifyFrontend = frontend.choice;
+  }
+
   const chooseDetails = [
     {
       type: 'list',
       name: 'choice',
       message: 'Choose what docs you want?',
-      choices: availableDocs[frontend.choice],
-      default: availableDocs[frontend.choice][0],
+      choices: availableDocs[amplifyFrontend],
+      default: availableDocs[amplifyFrontend][0],
     },
   ];
 
-  let detail = await inquirer.prompt(chooseDetails);
+  const detail = await inquirer.prompt(chooseDetails);
 
-  opn('https://aws-amplify.github.io/docs/' + frontend.choice +'/' + detail.choice);
+  opn(`https://aws-amplify.github.io/docs/${amplifyFrontend}/${detail.choice}`);
 }
 
-async function useParams(context, first, second){
-  let urlInfo = {}
-  let results = await searchDocs(first);
-  if (Object.keys(results).length < 1){
-    console.log("Could not find '" + first + "'")
+async function useParams(context, first, second) {
+  const urlInfo = {};
+  const results = await searchDocs(first);
+  if (Object.keys(results).length < 1) {
+    console.log(`Could not find '${first}'`);
     return;
   }
-  if (second){
-    if (results[second]){
-      urlInfo['detail'] = first;
-      urlInfo['frontend'] = second;
+  if (second) {
+    if (results[second]) {
+      urlInfo.detail = first;
+      urlInfo.frontend = second;
     } else if (results[first] && results[first].indexOf(second) > -1) {
-      urlInfo['detail'] = second;
-      urlInfo['frontend'] = first;
+      urlInfo.detail = second;
+      urlInfo.frontend = first;
     } else {
-      console.log("Could not find '" + second + "' in " + first)
-      return; 
+      console.log(`Could not find '${second}' in ${first}`);
+      return;
     }
-  } else {
-    if (Object.keys(results).length > 1 ){
+  } else if (Object.keys(results).length > 1) {
+    const amplifyFrontend = getCurrentFrontend(context);
+    if (results[amplifyFrontend]) {
+      urlInfo.frontend = amplifyFrontend;
+      urlInfo.detail = first;
+    } else {
       const chooseFrontend = [
         {
           type: 'list',
@@ -96,31 +92,44 @@ async function useParams(context, first, second){
           default: Object.keys(results)[0],
         },
       ];
-      let frontend = await inquirer.prompt(chooseFrontend);
-      urlInfo['detail'] = first;
-      urlInfo['frontend'] = frontend.choice;
-    } else if (Object.keys(results).length === 1 && results[Object.keys(results)[0]].length > 1){
-      const chooseDetails = [
-        {
-          type: 'list',
-          name: 'choice',
-          message: 'Choose what docs you want?',
-          choices: results[Object.keys(results)[0]],
-          default: results[Object.keys(results)[0]][0],
-        },
-      ];
-      let detail = await inquirer.prompt(chooseDetails);
+      const frontend = await inquirer.prompt(chooseFrontend);
+      urlInfo.detail = first;
+      urlInfo.frontend = frontend.choice;
+    }
+  } else if (Object.keys(results).length === 1 && results[Object.keys(results)[0]].length > 1) {
+    const frontend = Object.keys(results)[0];
+    const chooseDetails = [
+      {
+        type: 'list',
+        name: 'choice',
+        message: 'Choose what docs you want?',
+        choices: results[frontend],
+        default: results[frontend][0],
+      },
+    ];
+    const detail = await inquirer.prompt(chooseDetails);
 
-      urlInfo['frontend'] = Object.keys(results)[0];
-      urlInfo['detail'] = detail.choice;
-    } else if (Object.keys(results).length === 1 && results[Object.keys(results)[0]].length === 1){
-      urlInfo['frontend'] = Object.keys(results)[0];
-      urlInfo['detail'] = results[Object.keys(results)[0]][0];
+    urlInfo.frontend = frontend;
+    urlInfo.detail = detail.choice;
+  } else if (Object.keys(results).length === 1 && results[Object.keys(results)[0]].length === 1) {
+    const frontend = Object.keys(results)[0];
+    const detail = results[frontend][0];
+    urlInfo.frontend = frontend;
+    urlInfo.detail = detail;
+  }
+  opn(`https://aws-amplify.github.io/docs/${urlInfo.frontend}/${urlInfo.detail}`);
+}
+
+function getCurrentFrontend(context) {
+  if (context.amplify.pathManager.searchProjectRootPath()) {
+    const projectConfig = context.amplify.getProjectConfig();
+    if (projectConfig.frontend) {
+      return projectConfig.frontend;
     }
   }
-  opn('https://aws-amplify.github.io/docs/' + urlInfo['frontend'] +'/' + urlInfo['detail']);
+  return undefined;
 }
 
 module.exports = {
-  openDoc
-} 
+  openDoc,
+};
