@@ -10,8 +10,12 @@
     "amplify",
     "docs"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wizage/amplify-category-docs.git"
+  },
   "author": "wizage",
-  "license": "ISC",
+  "license": "Apache 2.0",
   "dependencies": {
     "chalk": "^2.4.2",
     "inquirer": "^6.2.2",
@@ -22,5 +26,9 @@
     "fs-extra": "^7.0.1",
     "nodegit": "^0.24.1",
     "path": "^0.12.7"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/wizage/amplify-category-docs/issues"
+  },
+  "homepage": "https://github.com/wizage/amplify-category-docs#readme"
 }
