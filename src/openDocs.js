@@ -4,7 +4,6 @@ const availableDocs = require('./docs.json');
 
 async function openDoc(context) {
   const { first, second } = context.parameters;
-
   if (first) {
     await useParams(context, first, second);
   } else {

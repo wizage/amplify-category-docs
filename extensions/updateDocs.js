@@ -12,11 +12,11 @@ module.exports = (context) => {
 
 async function updateDocs() {
   console.log('Cloning amplify docs...');
-  await git.Clone('https://github.com/aws-amplify/docs', './tmp');
+  await git.Clone('https://github.com/aws-amplify/docs',path.join(__dirname, 'tmp'));
   const fileNames = [];
   const params = {};
   console.log('Going through repo finding documents...');
-  dirScrapper('./tmp', /\.md$/, (filename) => {
+  dirScrapper(path.join(__dirname, 'tmp'), /\.md$/, (filename) => {
     fileNames.push(filename);
     const directory = filename.split('/');
     const url = directory[2].split('.')[0];
@@ -29,12 +29,12 @@ async function updateDocs() {
   });
   console.log('Writing results...');
   const jsonParams = JSON.stringify(params);
-  fs.writeFile('src/docs.json', jsonParams, (err) => {
+  fs.writeFile(path.join(__dirname, '../src', 'docs.json'), jsonParams, (err) => {
     if (err) {
       console.log(err);
     }
   });
-  fsExtra.removeSync('./tmp/');
+  fsExtra.removeSync(path.join(__dirname, 'tmp'));
 }
 
 
@@ -51,7 +51,8 @@ function fromDir(startPath, filter, callback) {
     if (stat.isDirectory()) {
       fromDir(filename, filter, callback); // recurse
     } else if (filter.test(filename)) {
-      callback(filename);
+      const prunedFilename = filename.split(path.join(__dirname, 'tmp'))[1];
+      callback(prunedFilename);
     }
   }
 }
@@ -75,4 +76,3 @@ function dirScrapper(startPath, filter, callback) {
     }
   }
 }
-// console.log(params);
