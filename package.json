@@ -1,6 +1,6 @@
 {
   "name": "amplify-category-docs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Link to Amplify docs",
   "main": "index.js",
   "scripts": {
@@ -18,13 +18,13 @@
   "license": "Apache 2.0",
   "dependencies": {
     "chalk": "^2.4.2",
-    "inquirer": "^6.2.2",
+    "inquirer": "^6.3.1",
     "opn": "^6.0.0"
   },
   "devDependencies": {
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
-    "nodegit": "^0.24.1",
+    "nodegit": "^0.24.3",
     "path": "^0.12.7"
   },
   "bugs": {
