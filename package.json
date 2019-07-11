@@ -1,6 +1,6 @@
 {
   "name": "amplify-category-docs",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Link to Amplify docs",
   "main": "index.js",
   "scripts": {
