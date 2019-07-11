@@ -28,7 +28,7 @@ async function updateDocs() {
     }
   });
   console.log('Writing results...');
-  const jsonParams = JSON.stringify(params);
+  const jsonParams = JSON.stringify(params, null, 4);
   fs.writeFile(path.join(__dirname, '../src', 'docs.json'), jsonParams, (err) => {
     if (err) {
       console.log(err);

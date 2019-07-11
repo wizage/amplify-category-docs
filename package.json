@@ -1,6 +1,6 @@
 {
   "name": "amplify-category-docs",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Link to Amplify docs",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,6 @@
     "opn": "^6.0.0"
   },
   "devDependencies": {
-    "fs": "0.0.1-security",
     "fs-extra": "^7.0.1",
     "nodegit": "^0.24.3",
     "path": "^0.12.7"
