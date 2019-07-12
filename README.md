@@ -1,7 +1,7 @@
 # Amplify Docs
 <p>
   <a href="https://www.npmjs.com/package/amplify-category-docs">
-      <img src="https://img.shields.io/npm/v/amplify-category-docs" />
+      <img src="https://img.shields.io/npm/v/amplify-category-docs.svg" />
   </a>
 </p>
 
