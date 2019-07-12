@@ -1,4 +1,9 @@
 # Amplify Docs
+<p>
+  <a href="https://www.npmjs.com/package/amplify-category-docs">
+      <img src="https://img.shields.io/npm/v/amplify-category-docs" />
+  </a>
+</p>
 
 An easy way to view the Amplify Docs from the Amplify CLI.
 
