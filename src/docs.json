@@ -73,6 +73,7 @@
         "index",
         "interactions",
         "logger",
+        "predictions",
         "pubsub",
         "push-notifications",
         "react-native",
